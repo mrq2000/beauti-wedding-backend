@@ -1,0 +1,12 @@
+.idea/
+.vscode/
+node_modules/
+dist/
+tmp/
+temp/
+
+# docker
+.data
+
+# env
+.env

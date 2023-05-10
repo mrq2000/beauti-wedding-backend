@@ -1,0 +1,19 @@
+name: Deploy
+on:
+  push:
+    branches: [master]
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.TEST_KEY }}
+          known_hosts: 'none'
+      - run: ssh-keyscan -H '172.104.182.12'  >> ~/.ssh/known_hosts
+      - run: echo "${{ secrets.TEST_ENV }}" > ./.env
+      - run: yarn install
+      - run: yarn build
+      - run: rsync -azP --exclude='.git*' . ssh root@172.104.182.12:/var/www/blog-backend --delete
+      - run: ssh root@172.104.182.12 "pm2 restart backend"
