@@ -14,22 +14,22 @@ export default class User {
   @Column({ type: 'varchar', length: 31, unique: true })
   username: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, select: false })
   password: string;
 
   @Column({ type: 'tinyint', default: UserStatus.ACTIVE })
   status: UserStatus;
 
-  @Column({ type: 'varchar', length: 63 })
-  broom_name: string;
+  @Column({ type: 'varchar', length: 63, nullable: true })
+  groom_name: string;
 
   @Column({ type: 'varchar', length: 63, nullable: true })
-  broom_farther_name: string;
+  groom_farther_name: string;
 
   @Column({ type: 'varchar', length: 63, nullable: true })
-  broom_mother_name: string;
+  groom_mother_name: string;
 
-  @Column({ type: 'varchar', length: 63 })
+  @Column({ type: 'varchar', length: 63, nullable: true })
   bride_name: string;
 
   @Column({ type: 'varchar', length: 63, nullable: true })
@@ -38,10 +38,10 @@ export default class User {
   @Column({ type: 'varchar', length: 63, nullable: true })
   bride_mother_name: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   location: string;
 
-  @Column({ type: 'varchar', length: 63 })
+  @Column({ type: 'varchar', length: 63, nullable: true })
   time: string;
 
   @OneToOne<Design>(() => Design, (Design) => Design.user)
