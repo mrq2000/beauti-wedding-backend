@@ -1,8 +1,5 @@
 import { getRepository } from 'typeorm';
-import bcrypt from 'bcryptjs';
 import { abort } from '../../helpers/error';
-import * as jwt from '../../helpers/jwt';
-import { UserStatus } from '../../enums/user';
 
 import User from '../../entities/User';
 
@@ -11,11 +8,7 @@ interface IGetUserInfo {
 }
 
 export const getUserInfo = async ({ userId }: IGetUserInfo) => {
-  const user = await getRepository(User)
-    .createQueryBuilder('user')
-    .where({ id: userId })
-    .innerJoinAndSelect('user.design', 'design')
-    .execute();
+  const user = await getRepository(User).findOne(userId);
 
   if (!user) {
     abort(404, 'Account not found');

@@ -10,6 +10,9 @@ export default class Template {
   @Column({ type: 'text' })
   data: string;
 
+  @Column({ type: 'varchar', length: 1023 })
+  preview_img_url: string;
+
   @Column({ type: 'tinyint', default: TemplateStatus.INACTIVE })
   status: TemplateStatus;
 

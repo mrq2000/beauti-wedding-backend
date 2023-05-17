@@ -1,14 +1,21 @@
 import { Request, Response } from 'express';
 
 import * as authService from '../services/auth';
-import { APP, Post } from '../../helpers/decorator';
+import { APP, Get, Post } from '../../helpers/decorator';
 import { validate } from '../../helpers/validate';
 import * as authSchema from '../validators/auth';
+import auth from '../middlewares/auth';
 
 @APP('/auth')
 export default class Auth {
+  @Get('/me', [auth])
+  async me(req: Request, res: Response) {
+    const user = req.user;
+    res.status(200).send(user);
+  }
+
   @Post('/sign-in')
-  async signIn(req: Request, res: Response): Promise<void> {
+  async signIn(req: Request, res: Response) {
     const params = {
       username: req.body.username,
       password: req.body.password,
@@ -20,7 +27,7 @@ export default class Auth {
   }
 
   @Post('/sign-up')
-  async signUp(req: Request, res: Response): Promise<void> {
+  async signUp(req: Request, res: Response) {
     const params = {
       username: req.body.username,
       password: req.body.password,

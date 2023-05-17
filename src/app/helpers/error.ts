@@ -18,7 +18,7 @@ export const abort = (status: number, message: string): void => {
 
 export const handleError =
   (fuc: any) =>
-  async (req: Request, res: Response, next: any): Promise<void> => {
+  async (req: Request, res: Response, next: any) => {
     try {
       await fuc(req, res, next);
     } catch (err) {
