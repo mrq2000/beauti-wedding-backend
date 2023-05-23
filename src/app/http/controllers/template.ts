@@ -10,8 +10,8 @@ export default class Templates {
   @Get('/')
   async getTemplates(req: Request, res: Response) {
     const params = {
-      offset: req.params.offset,
-      limit: req.params.limit,
+      offset: req.query.offset,
+      limit: req.query.limit,
     };
 
     const formatParams = await validate(templateSchema.getTemplateSchema, params);

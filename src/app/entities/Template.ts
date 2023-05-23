@@ -13,7 +13,7 @@ export default class Template {
   @Column({ type: 'varchar', length: 1023 })
   preview_img_url: string;
 
-  @Column({ type: 'tinyint', default: TemplateStatus.INACTIVE })
+  @Column({ type: 'tinyint', default: TemplateStatus.ACTIVE })
   status: TemplateStatus;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

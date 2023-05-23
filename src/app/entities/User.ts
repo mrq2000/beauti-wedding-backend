@@ -1,8 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
-import { UserStatus, UserPlan } from '../enums/user';
-import DesignDraft from './DesignDraft';
-import DesignPublic from './DesignPublic';
+import { UserStatus } from '../enums/user';
+import Design from './Design';
 
 @Entity('users')
 export default class User {
@@ -11,9 +10,6 @@ export default class User {
 
   @Column({ type: 'varchar', length: 31 })
   email: string;
-
-  @Column({ type: 'tinyint', default: UserPlan.FREE })
-  plan: UserPlan;
 
   @Column({ type: 'varchar', length: 31, unique: true })
   username: string;
@@ -24,35 +20,8 @@ export default class User {
   @Column({ type: 'tinyint', default: UserStatus.ACTIVE })
   status: UserStatus;
 
-  @Column({ type: 'varchar', length: 63, nullable: true })
-  groom_name: string;
-
-  @Column({ type: 'varchar', length: 63, nullable: true })
-  groom_farther_name: string;
-
-  @Column({ type: 'varchar', length: 63, nullable: true })
-  groom_mother_name: string;
-
-  @Column({ type: 'varchar', length: 63, nullable: true })
-  bride_name: string;
-
-  @Column({ type: 'varchar', length: 63, nullable: true })
-  bride_farther_name: string;
-
-  @Column({ type: 'varchar', length: 63, nullable: true })
-  bride_mother_name: string;
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  location: string;
-
-  @Column({ type: 'varchar', length: 63, nullable: true })
-  time: string;
-
-  @OneToOne<DesignDraft>(() => DesignDraft, (DesignDraft) => DesignDraft.owner)
-  designDraft: DesignDraft;
-
-  @OneToOne<DesignPublic>(() => DesignPublic, (DesignPublic) => DesignPublic.owner)
-  designPublic: DesignPublic;
+  @OneToMany(() => Design, (Design) => Design.owner)
+  designs: Design[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: string;

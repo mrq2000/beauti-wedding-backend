@@ -1,19 +1,14 @@
 import { Entity, PrimaryColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import Design from './Design';
 import Template from './Template';
-
-import User from './User';
 
 @Entity('designs_draft')
 export default class DesignDraft {
   @PrimaryColumn()
-  user_id: number;
+  design_id: number;
 
   @Column({ type: 'text' })
   data: string;
-
-  @OneToOne<User>(() => User, (User) => User.id)
-  @JoinColumn({ name: 'user_id' })
-  owner: User;
 
   @Column()
   template_id: number;
@@ -21,6 +16,10 @@ export default class DesignDraft {
   @OneToOne<Template>(() => Template, (Template) => Template.id)
   @JoinColumn({ name: 'template_id' })
   template: Template;
+
+  @OneToOne<Design>(() => Design, (Design) => Design.id)
+  @JoinColumn({ name: 'design_id' })
+  designInfo: Design;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: string;
