@@ -30,7 +30,6 @@ export const getPresignedUrl = (key: string, expires = 30000) => {
 
 export const uploadImageS3 = (path: string, filename: string, bucket?: string) => {
   const fileStream = fs.createReadStream(path);
-
   const uploadParams = {
     Bucket: bucket || process.env.AWS_S3_BUCKET,
     Body: fileStream,

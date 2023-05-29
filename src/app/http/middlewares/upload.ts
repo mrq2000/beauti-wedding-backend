@@ -11,7 +11,7 @@ const DEFAULT_MAX_SIZE_VIDEO = 1024 * 1024 * 1024; // 1 GB;
 const DEFAULT_MAX_SIZE_RESOURCE = 1024 * 1024 * 10; // 10MB
 
 const checkImage = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  const fileTypes = /jpeg|jpg|png$/;
+  const fileTypes = /jpeg|jpg|png|gif$/;
   const extname = fileTypes.test(file.mimetype);
   if (extname) {
     return cb(null, true);

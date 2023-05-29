@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 import Design from './Design';
 import Template from './Template';
 
@@ -13,7 +13,7 @@ export default class DesignPublic {
   @Column()
   template_id: number;
 
-  @OneToOne<Template>(() => Template, (Template) => Template.id)
+  @ManyToOne<Template>(() => Template, (Template) => Template.id)
   @JoinColumn({ name: 'template_id' })
   template: Template;
 

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 import { DesignPlan } from '../enums/design';
 import DesignDraft from './DesignDraft';
 import DesignPublic from './DesignPublic';
@@ -43,11 +43,13 @@ export default class Design {
   @Column()
   user_id: number;
 
-  @OneToOne<User>(() => User, (User) => User.id)
+  @ManyToOne<User>(() => User, (User) => User.id)
   @JoinColumn({ name: 'user_id' })
   owner: User;
 
-  @OneToOne<DesignDraft>(() => DesignDraft, (DesignDraft) => DesignDraft.designInfo)
+  @OneToOne<DesignDraft>(() => DesignDraft, (DesignDraft) => DesignDraft.designInfo, {
+    cascade: ['insert'],
+  })
   designDraft: DesignDraft;
 
   @OneToOne<DesignPublic>(() => DesignPublic, (DesignPublic) => DesignPublic.designInfo)
