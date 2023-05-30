@@ -17,3 +17,7 @@ export const createDesign = Joi.object().keys({
 export const checkExistDomain = Joi.object().keys({
   domain: Joi.string().required(),
 });
+
+export const updateDraftDesignData = Joi.object().keys({
+  data: Joi.string().required(),
+});

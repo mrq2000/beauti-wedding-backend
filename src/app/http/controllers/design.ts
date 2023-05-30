@@ -46,4 +46,19 @@ export default class Designs {
 
     res.status(200).send(responseData);
   }
+
+  @Post('/:id/draft/data', [isDesign, isOwner])
+  async updateDraftDesignData(req: Request, res: Response) {
+    const params = {
+      data: req.body.data,
+    };
+    const formatParams = await validate(designSchema.updateDraftDesignData, params);
+    await designService.updateDraftDesignData({
+      designId: req.design.id,
+      data: formatParams.data,
+    });
+    res.status(200).send({
+      success: true,
+    });
+  }
 }

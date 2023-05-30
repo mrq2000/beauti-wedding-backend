@@ -90,3 +90,13 @@ export const createDesign = async ({
     id: insertId,
   };
 };
+
+export const updateDraftDesignData = async ({ designId, data }: { designId: number; data: string }) => {
+  await getRepository(DesignDraft)
+    .createQueryBuilder()
+    .where('design_id = :designId', { designId })
+    .update({
+      data,
+    })
+    .execute();
+};
