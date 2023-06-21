@@ -21,3 +21,14 @@ export const checkExistDomain = Joi.object().keys({
 export const updateDraftDesignData = Joi.object().keys({
   data: Joi.string().required(),
 });
+
+export const updateDesignUserInfo = Joi.object().keys({
+  groomName: Joi.string().max(30).required(),
+  groomMotherName: Joi.string().max(30).allow(''),
+  groomFatherName: Joi.string().max(30).allow(''),
+  brideName: Joi.string().max(30).required(),
+  brideMotherName: Joi.string().max(30).allow(''),
+  brideFatherName: Joi.string().max(30).allow(''),
+  location: Joi.string().max(200).required(),
+  time: Joi.string().required(),
+});

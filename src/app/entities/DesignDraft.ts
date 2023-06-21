@@ -1,29 +1,19 @@
-import { Entity, PrimaryColumn, Column, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToOne, JoinColumn } from 'typeorm';
 import Design from './Design';
-import Template from './Template';
+import GenericEntity from './GenericEntity';
 
 @Entity('designs_draft')
-export default class DesignDraft {
-  @PrimaryColumn()
-  design_id: number;
+export default class DesignDraft extends GenericEntity {
+  @PrimaryColumn({ name: 'design_id' })
+  designId: number;
 
   @Column({ type: 'text' })
   data: string;
 
-  @Column()
-  template_id: number;
-
-  @ManyToOne<Template>(() => Template, (Template) => Template.id)
-  @JoinColumn({ name: 'template_id' })
-  template: Template;
+  @Column({ type: 'varchar', length: 63, nullable: true })
+  animation: string;
 
   @OneToOne<Design>(() => Design, (Design) => Design.id)
   @JoinColumn({ name: 'design_id' })
   designInfo: Design;
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: string;
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  updated_at: string;
 }

@@ -2,9 +2,10 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 import { UserStatus } from '../enums/user';
 import Design from './Design';
+import GenericEntity from './GenericEntity';
 
 @Entity('users')
-export default class User {
+export default class User extends GenericEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -22,10 +23,4 @@ export default class User {
 
   @OneToMany(() => Design, (Design) => Design.owner)
   designs: Design[];
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: string;
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  updated_at: string;
 }

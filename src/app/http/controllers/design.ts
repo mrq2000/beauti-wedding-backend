@@ -10,6 +10,14 @@ import { isDesign, isOwner } from '../middlewares/design';
 
 @APP('/designs', [auth])
 export default class Designs {
+  @Get('/')
+  async getDesigns(req: Request, res: Response) {
+    const userId = req.user.id;
+    const designs = await designService.getDesigns(userId);
+
+    res.status(200).send(designs);
+  }
+
   @Get('/check-domain')
   async checkExistDomain(req: Request, res: Response) {
     const params = {
@@ -60,5 +68,55 @@ export default class Designs {
     res.status(200).send({
       success: true,
     });
+  }
+
+  @Post('/:id/draft/animation', [isDesign, isOwner])
+  async updateDesignDraftAnimation(req: Request, res: Response) {
+    const animation = req.body.animation ? `${req.body.animation}` : '';
+    const designId = req.design.id;
+    await designService.updateDesignDraftAnimation(animation, designId);
+
+    res.status(200).send({
+      success: true,
+    });
+  }
+
+  @Post('/:id/user-info', [isDesign, isOwner])
+  async updateDesignUserInfo(req: Request, res: Response) {
+    const designId = req.design.id;
+
+    const params = {
+      groomName: req.body.groomName,
+      groomMotherName: req.body.groomMotherName,
+      groomFatherName: req.body.groomFatherName,
+      brideName: req.body.brideName,
+      brideMotherName: req.body.brideMotherName,
+      brideFatherName: req.body.brideFatherName,
+      location: req.body.location,
+      time: req.body.time,
+    };
+    const formatParams = await validate(designSchema.updateDesignUserInfo, params);
+    await designService.updateDesignUserInfo(formatParams, designId);
+
+    res.status(200).send({
+      success: true,
+    });
+  }
+
+  @Post('/:id/receivers', [isDesign, isOwner])
+  async updateDesignReceivers(req: Request, res: Response) {
+    const designId = req.design.id;
+    const receivers = `${req.body.receivers}`;
+    await designService.updateDesignReceivers(designId, receivers);
+
+    res.status(200).send({
+      success: true,
+    });
+  }
+
+  @Get('/:id/info', [isDesign, isOwner])
+  async getDesignInfo(req: Request, res: Response) {
+    const design = req.design;
+    res.status(200).send(design);
   }
 }

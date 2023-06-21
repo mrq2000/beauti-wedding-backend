@@ -2,11 +2,12 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne
 import { DesignPlan } from '../enums/design';
 import DesignDraft from './DesignDraft';
 import DesignPublic from './DesignPublic';
+import GenericEntity from './GenericEntity';
 
 import User from './User';
 
 @Entity('designs')
-export default class Design {
+export default class Design extends GenericEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -16,23 +17,29 @@ export default class Design {
   @Column({ type: 'varchar', length: 63, unique: true })
   domain: string;
 
-  @Column({ type: 'varchar', length: 63 })
-  groom_name: string;
+  @Column({ type: 'varchar', length: 1023, name: 'preview_img_url', nullable: true })
+  previewImgUrl: string;
 
-  @Column({ type: 'varchar', length: 63, nullable: true })
-  groom_farther_name: string;
+  @Column({ type: 'text', nullable: true })
+  receivers: string;
 
-  @Column({ type: 'varchar', length: 63, nullable: true })
-  groom_mother_name: string;
+  @Column({ type: 'varchar', length: 63, name: 'groom_name' })
+  groomName: string;
 
-  @Column({ type: 'varchar', length: 63 })
-  bride_name: string;
+  @Column({ type: 'varchar', length: 63, nullable: true, name: 'groom_farther_name' })
+  groomFatherName: string;
 
-  @Column({ type: 'varchar', length: 63, nullable: true })
-  bride_farther_name: string;
+  @Column({ type: 'varchar', length: 63, nullable: true, name: 'groom_mother_name' })
+  groomMotherName: string;
 
-  @Column({ type: 'varchar', length: 63, nullable: true })
-  bride_mother_name: string;
+  @Column({ type: 'varchar', length: 63, name: 'bride_name' })
+  brideName: string;
+
+  @Column({ type: 'varchar', length: 63, nullable: true, name: 'bride_father_name' })
+  brideFatherName: string;
+
+  @Column({ type: 'varchar', length: 63, nullable: true, name: 'bride_mother_name' })
+  brideMotherName: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   location: string;
@@ -40,8 +47,8 @@ export default class Design {
   @Column({ type: 'varchar', length: 63 })
   time: string;
 
-  @Column()
-  user_id: number;
+  @Column({ name: 'user_id' })
+  userId: number;
 
   @ManyToOne<User>(() => User, (User) => User.id)
   @JoinColumn({ name: 'user_id' })
@@ -54,10 +61,4 @@ export default class Design {
 
   @OneToOne<DesignPublic>(() => DesignPublic, (DesignPublic) => DesignPublic.designInfo)
   designPublic: DesignPublic;
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: string;
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  updated_at: string;
 }

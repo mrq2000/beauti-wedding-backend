@@ -4,14 +4,29 @@ import Design from '../../entities/Design';
 import Template from '../../entities/Template';
 import { abort } from '../../helpers/error';
 import DesignDraft from '../../entities/DesignDraft';
+import { UserInfo } from 'app/interface/design';
 
-export const getDesignInfo = async ({ designId }: { designId: number }) => {
-  const design = await getRepository(Design).findOne(designId);
-  return design;
+export const getDesigns = async (userId: number) => {
+  const designs = await getRepository(Design).find({
+    where: { userId },
+    relations: ['designPublic'],
+    order: {
+      updated_at: 'DESC',
+    },
+  });
+  return designs.map((design) => ({ ...design, designPublic: !!design.designPublic }));
+};
+
+export const getDesignInfo = async (designId: number) => {
+  const design = await getRepository(Design).findOne({
+    where: { id: designId },
+    relations: ['designPublic'],
+  });
+  return { ...design, designPublic: !!design.designPublic };
 };
 
 export const getDesignDraft = async ({ designId }: { designId: number }) => {
-  const design = await getRepository(DesignDraft).findOne({ design_id: designId });
+  const design = await getRepository(DesignDraft).findOne({ designId });
   return design;
 };
 
@@ -27,33 +42,13 @@ export const checkExistDomain = async ({ domain }: ICheckExistDomain) => {
   };
 };
 
-interface ICreateDomain {
+interface ICreateDomain extends UserInfo {
   userId: number;
   domain: string;
   templateId: number;
-  groomName: string;
-  groomMotherName?: string;
-  groomFatherName?: string;
-  brideName: string;
-  brideMotherName?: string;
-  brideFatherName?: string;
-  location?: string;
-  time: string;
 }
 
-export const createDesign = async ({
-  userId,
-  domain,
-  templateId,
-  groomName,
-  groomMotherName,
-  groomFatherName,
-  brideName,
-  brideMotherName,
-  brideFatherName,
-  location,
-  time,
-}: ICreateDomain) => {
+export const createDesign = async ({ templateId, ...insertData }: ICreateDomain) => {
   const template = await getRepository(Template).findOne(templateId);
   if (!template) abort(400, 'Template not found!');
   let insertId;
@@ -62,29 +57,26 @@ export const createDesign = async ({
     const designDraftRepository = transaction.getRepository(DesignDraft);
 
     const res = await designRepository.insert({
-      user_id: userId,
-      domain: domain,
-      groom_name: groomName,
-      groom_mother_name: groomMotherName,
-      groom_farther_name: groomFatherName,
-      bride_name: brideName,
-      bride_mother_name: brideMotherName,
-      bride_farther_name: brideFatherName,
-      time,
-      location,
+      ...insertData,
       designDraft: {
-        template_id: templateId,
         data: template.data,
+        animation: template.animation,
       },
     });
 
     insertId = res.raw.insertId;
     await designDraftRepository.insert({
-      template_id: templateId,
       data: template.data,
-      design_id: insertId,
+      designId: insertId,
     });
   });
+
+  getRepository(Template)
+    .createQueryBuilder()
+    .where('id = :templateId', { templateId })
+    .update()
+    .set({ usingCount: () => 'using_count + 1' })
+    .execute();
 
   return {
     id: insertId,
@@ -97,6 +89,30 @@ export const updateDraftDesignData = async ({ designId, data }: { designId: numb
     .where('design_id = :designId', { designId })
     .update({
       data,
+    })
+    .execute();
+};
+
+export const updateDesignDraftAnimation = async (animation: string, designId: number) => {
+  await getRepository(DesignDraft)
+    .createQueryBuilder()
+    .where('design_id = :designId', { designId })
+    .update({
+      animation,
+    })
+    .execute();
+};
+
+export const updateDesignUserInfo = async (userInfo: UserInfo, designId: number) => {
+  await getRepository(Design).createQueryBuilder().where('id = :designId', { designId }).update(userInfo).execute();
+};
+
+export const updateDesignReceivers = async (designId: number, receivers: string) => {
+  await getRepository(Design)
+    .createQueryBuilder()
+    .where('id = :designId', { designId })
+    .update({
+      receivers,
     })
     .execute();
 };
