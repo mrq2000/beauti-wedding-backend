@@ -1,12 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 
 import { TemplateStatus } from '../enums/template';
+import Designer from './Designer';
 import GenericEntity from './GenericEntity';
 
 @Entity('templates')
 export default class Template extends GenericEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ type: 'varchar', length: 1023, name: 'background_img', nullable: true })
+  backgroundImg: string;
 
   @Column({ type: 'varchar', length: 63, nullable: true })
   animation: string;
@@ -19,6 +23,10 @@ export default class Template extends GenericEntity {
 
   @Column({ type: 'varchar', length: 1023, name: 'preview_img_url' })
   previewImgUrl: string;
+
+  @ManyToOne<Designer>(() => Designer, (Designer) => Designer.id)
+  @JoinColumn({ name: 'designer_id' })
+  designer: Designer;
 
   @Column({ type: 'tinyint', default: TemplateStatus.ACTIVE })
   status: TemplateStatus;

@@ -58,9 +58,11 @@ export const createDesign = async ({ templateId, ...insertData }: ICreateDomain)
 
     const res = await designRepository.insert({
       ...insertData,
+      previewImgUrl: template.previewImgUrl,
       designDraft: {
         data: template.data,
         animation: template.animation,
+        backgroundImg: template.backgroundImg,
       },
     });
 

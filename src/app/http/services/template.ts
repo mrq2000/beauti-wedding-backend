@@ -8,7 +8,7 @@ interface IGetTemplate {
   limit: number;
 }
 
-export const getTemplate = async ({ offset, limit }: IGetTemplate) => {
+export const getTemplates = async ({ offset, limit }: IGetTemplate) => {
   const templates = await getRepository(Template)
     .createQueryBuilder()
     .where('status = :status', { status: TemplateStatus.ACTIVE })
@@ -19,4 +19,9 @@ export const getTemplate = async ({ offset, limit }: IGetTemplate) => {
     .execute();
 
   return templates;
+};
+
+export const getTemplate = async (id: number) => {
+  const template = await getRepository(Template).findOne(id);
+  return template;
 };

@@ -13,6 +13,9 @@ export default class DesignPublic extends GenericEntity {
   @Column({ type: 'varchar', length: 63, nullable: true })
   animation: string;
 
+  @Column({ type: 'varchar', length: 1023, name: 'background_img', nullable: true })
+  backgroundImg: string;
+
   @OneToOne<Design>(() => Design, (Design) => Design.id)
   @JoinColumn({ name: 'design_id' })
   designInfo: Design;
