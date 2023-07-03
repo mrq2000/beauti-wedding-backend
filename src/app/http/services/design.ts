@@ -105,6 +105,16 @@ export const updateDesignDraftAnimation = async (animation: string, designId: nu
     .execute();
 };
 
+export const updateDesignDraftBackground = async (backgroundImg: string, designId: number) => {
+  await getRepository(DesignDraft)
+    .createQueryBuilder()
+    .where('design_id = :designId', { designId })
+    .update({
+      backgroundImg,
+    })
+    .execute();
+};
+
 export const updateDesignUserInfo = async (userInfo: UserInfo, designId: number) => {
   await getRepository(Design).createQueryBuilder().where('id = :designId', { designId }).update(userInfo).execute();
 };

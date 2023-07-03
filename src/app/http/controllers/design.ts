@@ -81,6 +81,17 @@ export default class Designs {
     });
   }
 
+  @Post('/:id/draft/background-img', [isDesign, isOwner])
+  async updateDesignDraftBackground(req: Request, res: Response) {
+    const backgroundImg = req.body.backgroundImg ? `${req.body.backgroundImg}` : '';
+    const designId = req.design.id;
+    await designService.updateDesignDraftBackground(backgroundImg, designId);
+
+    res.status(200).send({
+      success: true,
+    });
+  }
+
   @Post('/:id/user-info', [isDesign, isOwner])
   async updateDesignUserInfo(req: Request, res: Response) {
     const designId = req.design.id;

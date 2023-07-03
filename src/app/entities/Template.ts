@@ -21,7 +21,7 @@ export default class Template extends GenericEntity {
   @Column({ type: 'text' })
   data: string;
 
-  @Column({ type: 'varchar', length: 1023, name: 'preview_img_url' })
+  @Column({ type: 'varchar', length: 1023, name: 'preview_img_url', nullable: true })
   previewImgUrl: string;
 
   @ManyToOne<Designer>(() => Designer, (Designer) => Designer.id)
