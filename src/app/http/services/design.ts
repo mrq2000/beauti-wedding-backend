@@ -4,7 +4,8 @@ import Design from '../../entities/Design';
 import Template from '../../entities/Template';
 import { abort } from '../../helpers/error';
 import DesignDraft from '../../entities/DesignDraft';
-import { UserInfo } from 'app/interface/design';
+import { UserInfo } from '../../interface/design';
+import DesignPublic from '../../entities/DesignPublic';
 
 export const getDesigns = async (userId: number) => {
   const designs = await getRepository(Design).find({
@@ -126,5 +127,20 @@ export const updateDesignReceivers = async (designId: number, receivers: string)
     .update({
       receivers,
     })
+    .execute();
+};
+
+export const publishDesign = async (designId: number) => {
+  const draftDesign = await getRepository(DesignDraft).findOne({ designId });
+  await getRepository(DesignPublic)
+    .createQueryBuilder()
+    .insert()
+    .values({
+      designId,
+      animation: draftDesign.animation,
+      data: draftDesign.data,
+      backgroundImg: draftDesign.backgroundImg,
+    })
+    .orUpdate({ overwrite: ['animation', 'data', 'background_img'], conflict_target: 'designId' })
     .execute();
 };

@@ -130,4 +130,14 @@ export default class Designs {
     const design = req.design;
     res.status(200).send(design);
   }
+
+  @Post('/:id/publish', [isDesign, isOwner])
+  async publishDesign(req: Request, res: Response) {
+    const designId = req.design.id;
+    await designService.publishDesign(designId);
+
+    res.status(200).send({
+      success: true,
+    });
+  }
 }
