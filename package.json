@@ -31,9 +31,6 @@
     "nanoid": "^3.1.23",
     "nodemailer": "^6.6.2",
     "reflect-metadata": "^0.1.10",
-    "serverless": "^3.33.0",
-    "serverless-dotenv-plugin": "^6.0.0",
-    "serverless-http": "^3.2.0",
     "sharp": "^0.28.3",
     "typeorm": "0.2.34",
     "typeorm-seeding": "^1.6.1",
@@ -63,7 +60,6 @@
     "start": "node --inspect ./dist/index.js",
     "build": "rimraf dist && tsc",
     "docker": "sudo docker-compose up -d",
-    "deploy": "serverless deploy",
     "prepare": "husky install"
   }
 }
