@@ -9,11 +9,11 @@ jobs:
       - uses: actions/checkout@v2
       - uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.TEST_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           known_hosts: 'none'
-      - run: ssh-keyscan -H '172.104.182.12'  >> ~/.ssh/known_hosts
-      - run: echo "${{ secrets.TEST_ENV }}" > ./.env
+      - run: ssh-keyscan -H '34.143.203.251'  >> ~/.ssh/known_hosts
+      - run: echo "${{ secrets.ENV }}" > ./.env
       - run: yarn install
       - run: yarn build
-      - run: rsync -azP --exclude='.git*' . ssh root@172.104.182.12:/var/www/blog-backend --delete
-      - run: ssh root@172.104.182.12 "pm2 restart backend"
+      - run: rsync -azP --exclude='.git*' . ssh anhchang1412@34.143.203.251:/var/www/beauty-wedding-backend --delete
+      - run: ssh anhchang1412@34.143.203.251 "pm2 restart beauty-wedding-backend"

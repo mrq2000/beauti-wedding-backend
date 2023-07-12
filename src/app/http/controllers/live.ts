@@ -13,4 +13,11 @@ export default class Live {
 
     res.status(200).send(responseData);
   }
+
+  @Get('/hello')
+  async hello(req: Request, res: Response) {
+    res.status(200).send({
+      message: 'hello',
+    });
+  }
 }

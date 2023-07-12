@@ -1,0 +1,50 @@
+service: beauty-wedding-backend
+frameworkVersion: "3"
+plugins:
+  - serverless-dotenv-plugin
+useDotenv: true
+package:
+  individually: true
+  patterns:
+    - '!.data/**'
+    - '!dist/**'
+    - '!node_modules/**'
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  memorySize: 2048
+  stage: prod
+  timeout: 15
+  region: ap-southeast-1
+  httpApi:
+    name: mnz-core-dev-api
+    cors:
+      allowedOrigins:
+        - https://*.taothiepcuoi.com
+        - http://localhost:3000
+      allowedHeaders:
+        - Content-Type
+        - account
+      allowedMethods:
+        - GET
+        - POST
+      allowCredentials: true
+    disableDefaultEndpoint: true
+
+functions:
+  beauty-wedding-api:
+    handler: src/index.handler
+    events:
+      - http:
+          path: /
+          method: post
+          cors: true
+      - http:
+          path: /
+          method: get
+          cors: true
+      - http:
+          path: /
+          method: OPTIONS
+          cors: true
