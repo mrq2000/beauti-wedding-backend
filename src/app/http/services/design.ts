@@ -15,6 +15,7 @@ export const getDesigns = async (userId: number) => {
       updated_at: 'DESC',
     },
   });
+
   return designs.map((design) => ({ ...design, designPublic: !!design.designPublic }));
 };
 
@@ -23,6 +24,9 @@ export const getDesignInfo = async (designId: number) => {
     where: { id: designId },
     relations: ['designPublic'],
   });
+  if (!design) {
+    abort(400, 'Design Not Found!');
+  }
   return { ...design, designPublic: !!design.designPublic };
 };
 
@@ -60,17 +64,14 @@ export const createDesign = async ({ templateId, ...insertData }: ICreateDomain)
     const res = await designRepository.insert({
       ...insertData,
       previewImgUrl: template.previewImgUrl,
-      designDraft: {
-        data: template.data,
-        animation: template.animation,
-        backgroundImg: template.backgroundImg,
-      },
     });
 
     insertId = res.raw.insertId;
     await designDraftRepository.insert({
       data: template.data,
       designId: insertId,
+      animation: template.animation,
+      backgroundImg: template.backgroundImg,
     });
   });
 
