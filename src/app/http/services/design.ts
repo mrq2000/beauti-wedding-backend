@@ -25,7 +25,7 @@ export const getDesignInfo = async (designId: number) => {
     relations: ['designPublic'],
   });
   if (!design) {
-    abort(400, 'Design Not Found!');
+    return null;
   }
   return { ...design, designPublic: !!design.designPublic };
 };
