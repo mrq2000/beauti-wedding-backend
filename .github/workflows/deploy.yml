@@ -11,9 +11,9 @@ jobs:
         with:
           key: ${{ secrets.SSH_KEY }}
           known_hosts: 'none'
-      - run: ssh-keyscan -H '34.143.203.251'  >> ~/.ssh/known_hosts
+      - run: ssh-keyscan -H '34.143.253.211'  >> ~/.ssh/known_hosts
       - run: echo "${{ secrets.ENV }}" > ./.env
       - run: yarn install
       - run: yarn build
-      - run: rsync -azP --exclude='.git*' . ssh anhchang1412@34.143.203.251:/var/www/beauty-wedding-backend --delete
-      - run: ssh anhchang1412@34.143.203.251 "pm2 restart beauty-wedding-backend"
+      - run: rsync -azP --exclude='.git*' . ssh anhchang1412@34.143.253.211:/var/www/beauty-wedding-backend --delete
+      - run: ssh anhchang1412@34.143.253.211 "pm2 restart beauty-wedding-backend"
