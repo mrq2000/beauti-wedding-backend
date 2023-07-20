@@ -1,19 +1,42 @@
-name: Deploy
+# name: Deploy
+# on:
+#   push:
+#     branches: [test]
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-20.04
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: shimataro/ssh-key-action@v2
+#         with:
+#           key: ${{ secrets.SSH_KEY }}
+#           known_hosts: 'none'
+#       - run: ssh-keyscan -H '34.143.203.251'  >> ~/.ssh/known_hosts
+#       - run: echo "${{ secrets.ENV }}" > ./.env
+#       - run: yarn install
+#       - run: yarn build
+#       - run: rsync -azP --progress --exclude='/ssh/*' . ssh —progress  anhchang1412@34.143.203.251:/var/www/beauty-wedding-backend --delete
+#       - run: ssh anhchang1412@34.143.203.251 "pm2 restart beauty-wedding-backend"
+
+name: DEPLOY
 on:
   push:
-    branches: [test]
+    branches:
+    - test
+
 jobs:
   deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          known_hosts: 'none'
-      - run: ssh-keyscan -H '34.143.203.251'  >> ~/.ssh/known_hosts
-      - run: echo "${{ secrets.ENV }}" > ./.env
-      - run: yarn install
-      - run: yarn build
-      - run: rsync -azP --progress --exclude='/ssh/*' . ssh —progress  anhchang1412@34.143.203.251:/var/www/beauty-wedding-backend --delete
-      - run: ssh anhchang1412@34.143.203.251 "pm2 restart beauty-wedding-backend"
+    - uses: actions/checkout@v3
+    - run: echo "${{ secrets.ENV }}" > ./.env
+    - run: yarn install
+    - run: yarn build
+    - name: rsync deployments
+      uses: burnett01/rsync-deployments@6.0.0
+      with:
+        switches: -avzr --delete
+        remote_path: /var/www/html/beauty-wedding-backend"
+        remote_host: 34.143.203.251
+        remote_user: anhchang1412
+        remote_key: ${{ secrets.SSH_KEY }}
