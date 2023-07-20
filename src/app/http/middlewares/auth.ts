@@ -7,7 +7,6 @@ import User from '../../entities/User';
 
 async function getUser(req: Request) {
   const userRepository = getRepository(User);
-
   const authorization = req.headers.authorization || '';
   if (authorization === '') return false;
   if (!authorization.startsWith('Bearer ')) return false;
@@ -37,6 +36,8 @@ async function auth(req: Request, res: Response, next: NextFunction): Promise<an
   }
 
   req['user'] = user;
+  req['currentDesignId'] = req.headers.current_design_id ? +req.headers.current_design_id : undefined;
+
   return next();
 }
 

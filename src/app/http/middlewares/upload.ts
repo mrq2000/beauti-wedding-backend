@@ -3,8 +3,11 @@ import { Request, Response, NextFunction } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import * as sharp from 'sharp';
 
+import { DesignPlan } from './../../enums/design';
 import { uploadS3, uploadServer } from '../../helpers/upload';
 import { s3 } from '../../helpers/s3';
+import User from '../../entities/User';
+import { getDesignInfo } from '../services/design';
 
 const DEFAULT_MAX_SIZE_IMAGE = 1024 * 1024; // 1 MB;
 const DEFAULT_MAX_SIZE_VIDEO = 1024 * 1024 * 1024; // 1 GB;
@@ -112,3 +115,34 @@ export const uploadResizeImageS3 =
       next();
     });
   };
+
+export const isCanUpload = async (req: Request, res: Response, next: NextFunction) => {
+  const user = req['user'] as User;
+  const currentDesignId = req['currentDesignId'];
+  if (!currentDesignId) {
+    return res.status(400).send({
+      message: 'Current designId was not attached!',
+    });
+  }
+
+  const design = await getDesignInfo(currentDesignId);
+  if (!design) {
+    return res.status(400).send({
+      message: 'Design not found!',
+    });
+  }
+
+  if (design.userId !== user.id) {
+    return res.status(403).send({
+      message: 'Forbidden',
+    });
+  }
+
+  if (design.plan == DesignPlan.FREE) {
+    return res.status(403).send({
+      message: 'Free Plan Cannot Using Upload Function!',
+    });
+  }
+
+  next();
+};
