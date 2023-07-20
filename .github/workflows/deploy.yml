@@ -1,7 +1,7 @@
 name: Deploy
 on:
   push:
-    branches: [master]
+    branches: [test]
 jobs:
   deploy:
     runs-on: ubuntu-20.04
@@ -15,5 +15,5 @@ jobs:
       - run: echo "${{ secrets.ENV }}" > ./.env
       - run: yarn install
       - run: yarn build
-      - run: rsync -azP --exclude='.git*' . ssh anhchang1412@34.143.203.251:/var/www/beauty-wedding-backend --delete
+      - run: rsync -azP --quite --exclude='.git*' . ssh anhchang1412@34.143.203.251:/var/www/beauty-wedding-backend --delete
       - run: ssh anhchang1412@34.143.203.251 "pm2 restart beauty-wedding-backend"
