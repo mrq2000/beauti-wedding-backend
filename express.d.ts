@@ -9,5 +9,6 @@ declare module 'express-serve-static-core' {
     isOwner: boolean;
     design: Design;
     template: Template;
+    currentDesignId?: number;
   }
 }
