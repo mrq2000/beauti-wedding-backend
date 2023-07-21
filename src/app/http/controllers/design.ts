@@ -125,6 +125,17 @@ export default class Designs {
     });
   }
 
+  @Post('/:id/domain', [isDesign, isOwner])
+  async updateDesignDomain(req: Request, res: Response) {
+    const designId = req.design.id;
+    const domain = `${req.body.domain}`;
+    await designService.updateDesignDomain(designId, domain);
+
+    res.status(200).send({
+      success: true,
+    });
+  }
+
   @Get('/:id/info', [isDesign, isOwner])
   async getDesignInfo(req: Request, res: Response) {
     const design = req.design;
