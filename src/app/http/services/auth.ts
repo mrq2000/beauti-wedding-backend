@@ -18,11 +18,11 @@ export const signIn = async ({ username, password }: ISignIn) => {
     .where('username = :username', { username })
     .getRawOne();
   if (!user || !bcrypt.compareSync(password, user.password)) {
-    abort(400, 'Username or password was wrong!');
+    abort(400, 'Tài khoản hoặc mật khẩu không chính xác!');
   }
 
   if (user.status == UserStatus.INACTIVE) {
-    abort(403, 'Your account was blocked');
+    abort(403, 'Tài khoản đã bị khóa');
   }
 
   const accessToken = jwt.generate({ userId: user.id });
@@ -38,7 +38,7 @@ interface ISignUp {
 export const signUp = async ({ username, password, email }: ISignUp) => {
   const user = await getRepository(User).findOne({ username });
   if (user) {
-    abort(404, 'Username already taken!');
+    abort(404, 'Username đã được sử dụng!');
   }
 
   const userInfo = await getRepository(User)

@@ -131,6 +131,20 @@ export const updateDesignReceivers = async (designId: number, receivers: string)
     .execute();
 };
 
+export const updateDesignDomain = async (designId: number, domain: string) => {
+  const design = await getRepository(Design).findOne({ where: { domain } });
+  if (design) {
+    return abort(400, 'Domain đã được sử dụng');
+  }
+  await getRepository(Design)
+    .createQueryBuilder()
+    .where('id = :designId', { designId })
+    .update({
+      domain,
+    })
+    .execute();
+};
+
 export const publishDesign = async (designId: number) => {
   const draftDesign = await getRepository(DesignDraft).findOne({ designId });
   await getRepository(DesignPublic)
