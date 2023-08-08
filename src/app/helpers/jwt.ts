@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 
-const DEFAULT_EXPIRES = 60 * 60 * 24 * 365; // 365 days
+const DEFAULT_EXPIRES = 60 * 60 * 24 * 30; // 30 days
 
 export const generate = (payload: Record<string, unknown>, expiresIn: number = DEFAULT_EXPIRES): string => {
   const token = jwt.sign(payload, process.env.JWT_KEY, {

@@ -15,7 +15,7 @@ export const getTemplates = async ({ offset, limit }: IGetTemplate) => {
     .offset(offset)
     .limit(limit)
     .orderBy('id', 'DESC')
-    .select(['id', 'preview_img_url', 'data'])
+    .select(['id', 'preview_img_url as previewImgUrl', 'data'])
     .execute();
 
   return templates;

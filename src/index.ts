@@ -18,7 +18,12 @@ import { RootRoute } from './app/helpers/decorator';
 createConnection()
   .then(async () => {
     const app = express();
-    const WHITE_LIST = ['http://localhost:8080', 'http://localhost:9000', 'https://app.taothiepcuoi.com'];
+    const WHITE_LIST = [
+      'http://localhost:8080',
+      'http://localhost:9000',
+      'https://app.taothiepcuoi.com',
+      'https://admin.taothiepcuoi.com',
+    ];
     const corsOptions = {
       origin: function (origin, callback) {
         if (WHITE_LIST.indexOf(origin) !== -1) {
