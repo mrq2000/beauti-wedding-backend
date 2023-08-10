@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { APP, Get, Post } from '../../helpers/decorator';
-import authDesigner from '../middlewares/designer';
+import authDesigner, { isOwnerTemplate } from '../middlewares/designer';
 import { validate } from '../../helpers/validate';
 import * as authSchema from '../validators/auth';
 import * as designerService from '../services/designer';
+import { isTemplate } from '../middlewares/template';
 
 @APP('/designers')
 export default class Designers {
@@ -25,7 +26,7 @@ export default class Designers {
     res.status(200).send(responseData);
   }
 
-  @Post('/change-password')
+  @Post('/change-password', [authDesigner])
   async changePassword(req: Request, res: Response) {
     const me = req.designer;
     const password = req.body.password;
@@ -39,5 +40,11 @@ export default class Designers {
     const me = req.designer;
     const templates = await designerService.getTemplates(me.id);
     res.status(200).send(templates);
+  }
+
+  @Get('/templates/:templateId', [authDesigner, isTemplate, isOwnerTemplate])
+  async getTemplate(req: Request, res: Response) {
+    const template = req.template;
+    res.status(200).send(template);
   }
 }

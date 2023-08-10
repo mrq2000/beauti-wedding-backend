@@ -5,6 +5,7 @@ import { getRepository } from 'typeorm';
 import { DesignerStatus } from '../../enums/designer';
 import * as jwt from '../../helpers/jwt';
 import Designer from '../../entities/Designer';
+import Template from '../../entities/Template';
 
 async function getDesigner(req: Request) {
   const designerRepository = getRepository(Designer);
@@ -52,6 +53,19 @@ export async function isDesigner(req: Request, res: Response, next: NextFunction
   }
 
   req['designer'] = designer;
+  return next();
+}
+
+export async function isOwnerTemplate(req: Request, res: Response, next: NextFunction): Promise<any> {
+  const designer = req['designer'] as Designer;
+  const template = req['template'] as Template;
+
+  if (template.designerId !== designer.id) {
+    return res.status(400).send({
+      message: 'You are not owner of this template!',
+    });
+  }
+
   return next();
 }
 
