@@ -24,6 +24,9 @@ export default class Template extends GenericEntity {
   @Column({ type: 'varchar', length: 1023, name: 'preview_img_url', nullable: true })
   previewImgUrl: string;
 
+  @Column({ name: 'designer_id' })
+  designerId: number;
+
   @ManyToOne<Designer>(() => Designer, (Designer) => Designer.id)
   @JoinColumn({ name: 'designer_id' })
   designer: Designer;

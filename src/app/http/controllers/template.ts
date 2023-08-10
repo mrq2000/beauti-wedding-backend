@@ -22,7 +22,7 @@ export default class Templates {
     res.status(200).send(responseData);
   }
 
-  @Get('/:id', [isTemplate])
+  @Get('/:templateId', [isTemplate])
   async getTemplate(req: Request, res: Response) {
     const template = req.template;
     if (template.status !== TemplateStatus.ACTIVE) {

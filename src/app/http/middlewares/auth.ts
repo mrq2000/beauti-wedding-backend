@@ -25,13 +25,13 @@ async function auth(req: Request, res: Response, next: NextFunction): Promise<an
 
   if (!user) {
     return res.status(401).send({
-      message: 'You must be logged in',
+      message: 'Bạn chưa đăng nhập',
     });
   }
 
   if (user.status === UserStatus.INACTIVE) {
     return res.status(401).send({
-      message: 'You have been blocked',
+      message: 'Tài khoản của bạn đã bị khóa!',
     });
   }
 
